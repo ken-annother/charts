@@ -11,8 +11,9 @@
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_margin="30dp"
         android:layout_marginTop="50dp"
-        android:background="@color/white"
-        android:layout_margin="30dp"/>
+        android:background="@color/white"/>
+
 
 </LinearLayout>

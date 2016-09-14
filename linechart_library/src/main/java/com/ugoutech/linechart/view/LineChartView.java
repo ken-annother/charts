@@ -3,10 +3,12 @@ package com.ugoutech.linechart.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import com.ugoutech.linechart.holder.Axix;
@@ -14,6 +16,7 @@ import com.ugoutech.linechart.holder.PointValue;
 import com.ugoutech.linechart.utils.TestUtils;
 import com.ugoutech.linechart.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,6 +59,9 @@ public class LineChartView extends ViewGroup {
     //坐标系顶部的距离
     private int mTopPadding = 30;
 
+    //触摸灵敏度参数
+    private int touchSence = 60;
+
     //是否显示x轴的标签代替值
     private boolean mEnableShowLabel;
 
@@ -69,6 +75,7 @@ public class LineChartView extends ViewGroup {
     private Axix mAxix;
     private Paint dotPaint;
     private Paint linePaint;
+    private Paint dotPaintWhite;
 
 
     public LineChartView(Context context) {
@@ -137,9 +144,16 @@ public class LineChartView extends ViewGroup {
         dotPaint.setStrokeWidth(Utils.convertDpToPixel(mContext, 5f));
         dotPaint.setStyle(Paint.Style.FILL);
 
+        dotPaintWhite = new Paint(Paint.ANTI_ALIAS_FLAG);
+        dotPaintWhite.setColor(Color.WHITE);
+        dotPaintWhite.setStrokeWidth(Utils.convertDpToPixel(mContext, 8f));
+        dotPaintWhite.setStyle(Paint.Style.FILL);
+
+
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(0xFFFF7700);
         linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setPathEffect(new CornerPathEffect(20));
         linePaint.setStrokeWidth(Utils.convertDpToPixel(mContext, 2f));
     }
 
@@ -152,9 +166,32 @@ public class LineChartView extends ViewGroup {
             mAxix.draw(mCanvas, axixPaint);
             drawLabel();
             drawValueLine();
-
+            drawDots();
         }
 
+
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).draw(canvas);
+        }
+
+    }
+
+
+    /**
+     * 画数据点
+     */
+    private void drawDots() {
+        int datasetSize = mDataSets.size();
+        for (int i = 0; i < datasetSize; i++) {
+            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyVauue());
+
+            //画出了白色空隙数据点
+            mCanvas.drawCircle(priv[0], priv[1], 15, dotPaintWhite);
+
+            //画出了数据点
+            mCanvas.drawCircle(priv[0], priv[1], 10, dotPaint);
+
+        }
     }
 
 
@@ -173,21 +210,15 @@ public class LineChartView extends ViewGroup {
             //画出了垂线
             mCanvas.drawLine(priv[0], priv[1], priv[0], mAxix.getOrgPriv()[1], axixPaint);
 
-            if(i == 0){
-                path.moveTo(priv[0],priv[1]);
-            }else{
-                path.lineTo(priv[0],priv[1]);
+            if (i == 0) {
+                path.moveTo(priv[0], priv[1]);
+            } else {
+                path.lineTo(priv[0], priv[1]);
             }
         }
 
-        mCanvas.drawPath(path,linePaint);
+        mCanvas.drawPath(path, linePaint);
 
-
-//        float[] privBack = mAxix.calcPriv(i + 1, mDataSets.get(i + 1).getyVauue());
-//        mCanvas.drawLine(priv[0], priv[1], privBack[0], privBack[1], linePaint);
-//            //画出了数据点
-//            mCanvas.drawCircle(priv[0], priv[1], 10, dotPaint);
-//
 
     }
 
@@ -289,6 +320,81 @@ public class LineChartView extends ViewGroup {
 
     public void setTopPadding(int topPadding) {
         this.mTopPadding = topPadding;
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        //如果没有绑定数据，则不执行
+        if (mDataSets == null || mDataSets.size() == 0) {
+            return false;
+        }
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                float x = event.getX();
+                float y = event.getY();
+
+                int index = checkHint(x, y);
+                handleHintEffect(index);
+
+                break;
+
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_MOVE:
+
+                break;
+        }
+
+
+        return super.onTouchEvent(event);
+    }
+
+
+    /**
+     * 处理击中后的效果
+     *
+     * @param index 如果是-1，则没有击中
+     */
+    private void handleHintEffect(int index) {
+
+        if (index >= 0) {
+            TestUtils.showToast(mContext, "Index : " + index + "被击中了");
+        }
+    }
+
+
+    /**
+     * 监测点击碰撞 触到的点
+     *
+     * @param x 触到的X坐标
+     * @param y 触的Y坐标
+     * @return 如果是-1，则没有击中
+     */
+    private int checkHint(float touchx, float touchy) {
+        List<Integer> hintList = new ArrayList();
+
+        for (int i = 0; i < mDataSets.size(); i++) {
+            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyVauue());
+
+            float absX = Math.abs(touchx - priv[0]);
+            float absY = Math.abs(touchy - priv[1]);
+
+            float delta = touchSence * touchSence - absX * absX - absY * absY;
+
+            if (delta >= 0) {       //如果符合则加入触发的列表中
+                hintList.add(i);
+            }
+
+        }
+
+        if (hintList.size() == 1) {
+            return hintList.get(0);
+        } else {
+            return -1;
+        }
+
     }
 }
 

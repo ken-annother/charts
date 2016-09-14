@@ -1,6 +1,8 @@
 package com.ugoutech.linechart.utils;
 
+import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 
 /**
@@ -13,6 +15,11 @@ import android.view.View;
  */
 
 public abstract class TestUtils {
+
+
+    private static Toast sToast;
+
+
     private TestUtils(){}
 
     public static String transMode(int measureMode){
@@ -24,6 +31,16 @@ public abstract class TestUtils {
             return "UNSPECIFIED";
         }
 
+    }
+
+
+    public static void showToast(Context context,String txt){
+        if(sToast == null){
+            sToast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+        }
+
+        sToast.setText(txt);
+        sToast.show();
     }
 
 }
