@@ -10,23 +10,23 @@ package com.ugoutech.linechart.holder;
  */
 
 public class PointValue {
-    private float yVauue;
+    private float yValue;
     private String xValue;
 
 
-    public PointValue(float yVauue, String xValue) {
-        this.yVauue = yVauue;
+    public PointValue(float yValue, String xValue) {
+        this.yValue = yValue;
         this.xValue = xValue;
     }
 
 
-    public float getyVauue() {
-        return yVauue;
+    public float getyValue() {
+        return yValue;
     }
 
 
-    public void setyVauue(float yVauue) {
-        this.yVauue = yVauue;
+    public void setyValue(float yValue) {
+        this.yValue = yValue;
     }
 
 
@@ -43,7 +43,7 @@ public class PointValue {
     @Override
     public String toString() {
         return "PointValue{" +
-                "yVauue=" + yVauue +
+                "yValue=" + yValue +
                 ", xValue=" + xValue +
                 '}';
     }

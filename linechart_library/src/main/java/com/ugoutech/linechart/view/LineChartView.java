@@ -77,6 +77,12 @@ public class LineChartView extends ViewGroup {
     private Paint linePaint;
     private Paint dotPaintWhite;
 
+    //提示标记
+    private MarkView mMarkView;
+
+    //画标记
+    private boolean mCanDraw;
+
 
     public LineChartView(Context context) {
         super(context);
@@ -169,9 +175,8 @@ public class LineChartView extends ViewGroup {
             drawDots();
         }
 
-
-        for (int i = 0; i < getChildCount(); i++) {
-            getChildAt(i).draw(canvas);
+        if (mMarkView != null && mCanDraw) {
+            mMarkView.draw(mCanvas);
         }
 
     }
@@ -183,7 +188,7 @@ public class LineChartView extends ViewGroup {
     private void drawDots() {
         int datasetSize = mDataSets.size();
         for (int i = 0; i < datasetSize; i++) {
-            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyVauue());
+            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyValue());
 
             //画出了白色空隙数据点
             mCanvas.drawCircle(priv[0], priv[1], 15, dotPaintWhite);
@@ -205,7 +210,7 @@ public class LineChartView extends ViewGroup {
         path.reset();
 
         for (int i = 0; i < datasetSize; i++) {
-            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyVauue());
+            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyValue());
 
             //画出了垂线
             mCanvas.drawLine(priv[0], priv[1], priv[0], mAxix.getOrgPriv()[1], axixPaint);
@@ -234,11 +239,11 @@ public class LineChartView extends ViewGroup {
         } else {
             int datasetSize = mDataSets.size();
 
-            float max = mDataSets.get(0).getyVauue();
-            float min = mDataSets.get(0).getyVauue();
+            float max = mDataSets.get(0).getyValue();
+            float min = mDataSets.get(0).getyValue();
             for (int i = 1; i < datasetSize; i++) {
-                if (mDataSets.get(i).getyVauue() > max) max = mDataSets.get(i).getyVauue();
-                if (mDataSets.get(i).getyVauue() < min) min = mDataSets.get(i).getyVauue();
+                if (mDataSets.get(i).getyValue() > max) max = mDataSets.get(i).getyValue();
+                if (mDataSets.get(i).getyValue() < min) min = mDataSets.get(i).getyValue();
             }
 
             mAxix = new Axix(0, mCanvasHeight - mLabelHeight - mBottomPadding, mCanvasWidth, mTopPadding,
@@ -360,23 +365,29 @@ public class LineChartView extends ViewGroup {
     private void handleHintEffect(int index) {
 
         if (index >= 0) {
-            TestUtils.showToast(mContext, "Index : " + index + "被击中了");
+//            TestUtils.showToast(mContext, "Index : " + index + "被击中了");
+            mMarkView.setLabel(mDataSets.get(index).getyValue() + "");
+            mCanDraw = true;
+
+        } else {
+            mCanDraw = false;
         }
+
+        invalidate();
+
     }
 
 
     /**
      * 监测点击碰撞 触到的点
      *
-     * @param x 触到的X坐标
-     * @param y 触的Y坐标
      * @return 如果是-1，则没有击中
      */
     private int checkHint(float touchx, float touchy) {
         List<Integer> hintList = new ArrayList();
 
         for (int i = 0; i < mDataSets.size(); i++) {
-            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyVauue());
+            float[] priv = mAxix.calcPriv(i, mDataSets.get(i).getyValue());
 
             float absX = Math.abs(touchx - priv[0]);
             float absY = Math.abs(touchy - priv[1]);
@@ -395,6 +406,16 @@ public class LineChartView extends ViewGroup {
             return -1;
         }
 
+    }
+
+
+    /**
+     * 设置提示的View
+     *
+     * @param markView
+     */
+    public void setMarkView(MarkView markView) {
+        mMarkView = markView;
     }
 }
 

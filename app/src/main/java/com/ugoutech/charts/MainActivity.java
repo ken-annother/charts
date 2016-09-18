@@ -26,9 +26,7 @@ public class MainActivity extends AppCompatActivity {
         mChart = (LineChartView) findViewById(R.id.chart);
 
         MarkView markView = new MarkView(this);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
-                .LayoutParams.WRAP_CONTENT);
-        mChart.addView(markView, params);
+        mChart.setMarkView(markView);
 
         initChart();
 
