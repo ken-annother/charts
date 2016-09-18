@@ -139,7 +139,7 @@ public class LineChartView extends ViewGroup {
         this.mContext = context;
 
         axixPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        axixPaint.setColor(0xFFFFC0CB);
+        axixPaint.setColor(0xFFF3F3F3);
         axixPaint.setStrokeWidth(Utils.convertDpToPixel(mContext, 1f));
 
 

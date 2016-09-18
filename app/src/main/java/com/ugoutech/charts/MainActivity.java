@@ -36,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private void initChart() {
         List<PointValue> values = new ArrayList<>();
 
-        values.add(new PointValue(121, "09-07"));
-        values.add(new PointValue(0, "09-08"));
-        values.add(new PointValue(500, "09-09"));
-        values.add(new PointValue(42, "09-10"));
-        values.add(new PointValue(67, "09-11"));
-        values.add(new PointValue(123, "09-12"));
-        values.add(new PointValue(55, "09-13"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-07"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-08"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-09"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-10"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-11"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-12"));
+        values.add(new PointValue((float) (Math.random() * 1000), "09-13"));
 
         mChart.setData(values);
     }
