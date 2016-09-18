@@ -3,6 +3,7 @@ package com.ugoutech.linechart.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ public class MarkView extends RelativeLayout {
 
     private final Context mContext;
     private TextView mLabel;
+    private View mInflated;
+    private ImageView mBg;
 
 
     public MarkView(Context context) {
@@ -32,17 +35,19 @@ public class MarkView extends RelativeLayout {
 
 
     private void initView() {
-        View inflated = View.inflate(mContext, R.layout.markview, this);
+        mInflated = View.inflate(mContext, R.layout.markview, this);
 
-        mLabel = (TextView) inflated.findViewById(R.id.label);
 
-        inflated.setLayoutParams(new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout
+        mBg = (ImageView) mInflated.findViewById(R.id.bg);
+        mLabel = (TextView) mInflated.findViewById(R.id.label);
+
+        mInflated.setLayoutParams(new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout
                 .LayoutParams.WRAP_CONTENT));
-        inflated.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
+        mInflated.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
                 MeasureSpec.UNSPECIFIED));
 
         // measure(getWidth(), getHeight());
-        inflated.layout(0, 0, inflated.getMeasuredWidth(), inflated.getMeasuredHeight());
+        mInflated.layout(0, 0, mInflated.getMeasuredWidth(), mInflated.getMeasuredHeight());
     }
 
 
@@ -59,7 +64,6 @@ public class MarkView extends RelativeLayout {
      */
     public void setLabel(String label) {
         mLabel.setText(label);
-        refreshContent();
     }
 
 
@@ -70,5 +74,37 @@ public class MarkView extends RelativeLayout {
         measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
         layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
+    }
+
+
+    /**
+     * 在指定的位置上画图
+     *
+     * @param canvas
+     * @param posX
+     * @param posY
+     */
+    public void draw(Canvas canvas, float posX, float posY) {
+        int saveId = canvas.save();
+        // translate to the correct position and draw
+        canvas.translate(posX, posY);
+        draw(canvas);
+        canvas.restoreToCount(saveId);
+    }
+
+
+    /**
+     * 设置标记视图的朝向
+     *
+     * @param b
+     */
+    public void setShowDownShape(boolean b) {
+
+        if (b) {
+            mBg.setBackgroundResource(R.drawable.marker);
+        } else {
+            mBg.setBackgroundResource(R.drawable.marker2);
+        }
+
     }
 }

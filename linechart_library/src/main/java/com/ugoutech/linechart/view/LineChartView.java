@@ -83,6 +83,11 @@ public class LineChartView extends ViewGroup {
     //画标记
     private boolean mCanDraw;
 
+    //标记的X位置
+    private float mMarkViewPosX;
+    //标记的Y位置
+    private float mMarkViewPosY;
+
 
     public LineChartView(Context context) {
         super(context);
@@ -176,7 +181,7 @@ public class LineChartView extends ViewGroup {
         }
 
         if (mMarkView != null && mCanDraw) {
-            mMarkView.draw(mCanvas);
+            mMarkView.draw(mCanvas, mMarkViewPosX, mMarkViewPosY);
         }
 
     }
@@ -367,6 +372,7 @@ public class LineChartView extends ViewGroup {
         if (index >= 0) {
 //            TestUtils.showToast(mContext, "Index : " + index + "被击中了");
             mMarkView.setLabel(mDataSets.get(index).getyValue() + "");
+            determineMarkViewPos(index);
             mCanDraw = true;
 
         } else {
@@ -374,6 +380,42 @@ public class LineChartView extends ViewGroup {
         }
 
         invalidate();
+
+    }
+
+
+    /**
+     * 确定当前标记的显示位置
+     *
+     * @param index
+     */
+    private void determineMarkViewPos(int index) {
+
+        int width = mMarkView.getWidth();
+        int height = mMarkView.getHeight();
+
+        Log.d(TAG, "标记的 width" + width);
+        Log.d(TAG, "标记的 height" + height);
+
+
+        float[] priv = mAxix.calcPriv(index, mDataSets.get(index).getyValue());
+
+        if (priv[1] - height >= 0) {
+            mMarkView.setShowDownShape(true);
+            mMarkView.refreshContent();
+
+            mMarkViewPosX = priv[0] - width / 2;
+            mMarkViewPosY = priv[1] - height;
+
+        } else {        //标记超出了上线，则应该将标记调转方向
+
+            mMarkView.setShowDownShape(false);
+            mMarkView.refreshContent();
+
+            mMarkViewPosX = priv[0] - width / 2;
+            mMarkViewPosY = priv[1];
+        }
+
 
     }
 
