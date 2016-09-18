@@ -1,4 +1,4 @@
-package com.ugoutech.linechart.holder;
+package com.soongkun.linechart.holder;
 
 /**
  * @描述: 数据点

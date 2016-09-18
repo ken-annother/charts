@@ -1,4 +1,4 @@
-package com.ugoutech.linechart.view;
+package com.soongkun.linechart.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ugoutech.linechart.R;
+import com.soongkun.linechart.R;
 
 
 /**

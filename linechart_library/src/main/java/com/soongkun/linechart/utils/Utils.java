@@ -1,4 +1,4 @@
-package com.ugoutech.linechart.utils;
+package com.soongkun.linechart.utils;
 
 import android.content.Context;
 import android.content.res.Resources;

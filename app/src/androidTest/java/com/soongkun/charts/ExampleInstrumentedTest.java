@@ -1,4 +1,4 @@
-package com.ugoutech.linechart;
+package com.soongkun.charts;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
-
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -22,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.ugoutech.linechart.test", appContext.getPackageName());
+        assertEquals("com.ugoutech.charts", appContext.getPackageName());
     }
 }

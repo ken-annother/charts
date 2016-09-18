@@ -5,9 +5,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/gray"
-              tools:context="com.ugoutech.charts.MainActivity">
+              tools:context="com.soongkun.charts.MainActivity">
 
-    <com.ugoutech.linechart.view.LineChartView
+    <com.soongkun.linechart.view.LineChartView
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="200dp"

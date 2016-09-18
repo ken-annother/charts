@@ -1,7 +1,6 @@
-package com.ugoutech.linechart.holder;
+package com.soongkun.linechart.holder;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 

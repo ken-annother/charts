@@ -1,4 +1,4 @@
-package com.ugoutech.linechart.view;
+package com.soongkun.linechart.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,10 +11,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
-import com.ugoutech.linechart.holder.Axix;
-import com.ugoutech.linechart.holder.PointValue;
-import com.ugoutech.linechart.utils.TestUtils;
-import com.ugoutech.linechart.utils.Utils;
+import com.soongkun.linechart.holder.Axix;
+import com.soongkun.linechart.holder.PointValue;
+import com.soongkun.linechart.utils.TestUtils;
+import com.soongkun.linechart.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
